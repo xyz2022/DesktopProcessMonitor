@@ -9,6 +9,8 @@ using System.Threading;
 
 namespace App.WindowsService;
 
+
+
 public sealed class WindowsBackgroundService : BackgroundService
 {
     private readonly AppGuardService _appGuardService;
@@ -22,25 +24,46 @@ public sealed class WindowsBackgroundService : BackgroundService
     [DllImport("user32.dll", SetLastError = true)]
     static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
         {          
             _logger.LogWarning("Hello world. Starting service {time}", DateTimeOffset.Now);
-            string executablePath = Path.Combine(AppContext.BaseDirectory, "PsiService.exe");
+            //string executablePath = Path.Combine(AppContext.BaseDirectory, "PsiService.exe");
+            string executablePath = Path.Combine(AppContext.BaseDirectory, "WMProcMon.exe");
             bool success;
+
+            //new Thread(() => StartPipeClient()) { IsBackground = true }.Start();
+
             while (!stoppingToken.IsCancellationRequested)
             {              
                 Process[] ps = Process.GetProcessesByName("explorer");
+                List<int> sessionIds = new List<int>();
+                List<int> proccessIds = new List<int>();
+                //For each user session there should be at least 1 explorer proces running
+                //so we can launch one psiblock per session
+                //note: there may be more than 1 explorer.exe process per session
+                //we need to start only one psi per session
+                
                 for (int i = 0; i < ps.Length; i++)
-                {                       
-                    success = ProcessHandler.ProcessAsUser.Launch(executablePath, ps[i].SessionId);
+                {
+                    if (!sessionIds.Contains(ps[i].SessionId))
+                    {
+                        sessionIds.Add(ps[i].SessionId);
+                        proccessIds.Add(ps[i].Id);
+                    }
+                }
+                for(int i = 0; i < sessionIds.Count; i++) 
+                {
+                    _logger.LogWarning(i.ToString() + " Inspecting Session " + ps[i].SessionId.ToString());
+                    success = ProcessHandler.ProcessAsUser.Launch(executablePath, proccessIds.ElementAt(i), sessionIds.ElementAt(i));
                     if(success)
                     {
-                        _logger.LogWarning(i.ToString() + " Started PsiService in Session ID: " + ps[i].SessionId.ToString());
+                        _logger.LogWarning(i.ToString() + " Started AppGuardService in Session ID: " + ps[i].SessionId.ToString());
                     }
                 }                                         
-                await Task.Delay(TimeSpan.FromSeconds(5f), stoppingToken);                
+                await Task.Delay(TimeSpan.FromSeconds(15f), stoppingToken);                
             }
         }
         catch (TaskCanceledException)
@@ -63,4 +86,13 @@ public sealed class WindowsBackgroundService : BackgroundService
             Environment.Exit(1);
         }
     }
+
+
+//    async void StartPipeClient()
+//    {
+//        while (true)
+//        {
+//
+//        }
+//    }
 }

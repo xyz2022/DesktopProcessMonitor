@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -80,14 +81,14 @@ namespace App.WindowsService
             [DllImport("advapi32.dll", SetLastError = true)]
             private static extern bool CreateProcessAsUser(
                 IntPtr hToken,
-                string lpApplicationName,
+                string? lpApplicationName,
                 string lpCommandLine,
                 ref SECURITY_ATTRIBUTES lpProcessAttributes,
                 ref SECURITY_ATTRIBUTES lpThreadAttributes,
                 bool bInheritHandles,
                 uint dwCreationFlags,
                 IntPtr lpEnvironment,
-                string lpCurrentDirectory,
+                string? lpCurrentDirectory,
                 ref STARTUPINFO lpStartupInfo,
                 out PROCESS_INFORMATION lpProcessInformation);
 
@@ -179,7 +180,7 @@ namespace App.WindowsService
                 {
                     int error = Marshal.GetLastWin32Error();
                     string message = String.Format("CreateProcessAsUser Error: {0}", error);
-                    Debug.WriteLine(message);
+                    //Debug.WriteLine(message);
                 }
 
                 return result;
@@ -202,7 +203,7 @@ namespace App.WindowsService
                 {
 
                     string details = String.Format("ProcessID {0} Not Available", processId);
-                    Debug.WriteLine(details);
+                    //Debug.WriteLine(details);
                     throw;
                 }
 
@@ -228,7 +229,7 @@ namespace App.WindowsService
                     if (retVal == false)
                     {
                         string message = String.Format("DuplicateTokenEx Error: {0}", Marshal.GetLastWin32Error());
-                        Debug.WriteLine(message);
+                        //Debug.WriteLine(message);
                     }
 
                 }
@@ -237,7 +238,7 @@ namespace App.WindowsService
                 {
 
                     string message = String.Format("OpenProcessToken Error: {0}", Marshal.GetLastWin32Error());
-                    Debug.WriteLine(message);
+                    //Debug.WriteLine(message);
 
                 }
 
@@ -259,59 +260,101 @@ namespace App.WindowsService
                     //It should not adversley affect CreateProcessAsUser.
 
                     string message = String.Format("CreateEnvironmentBlock Error: {0}", Marshal.GetLastWin32Error());
-                    Debug.WriteLine(message);
+                    //Debug.WriteLine(message);
 
                 }
                 return envBlock;
             }
-            public static bool IsPsiUp(int sessionID)
+            public static bool IsPsiServiceUpOld(int sessionID)
             {
-                int sessionIndex = -1;
-
                 Process[] ps = Process.GetProcessesByName("PsiService");
                 for (int i = 0; i < ps.Length; i++)
                 {
                     if (ps[i].SessionId == sessionID)
-                        sessionIndex = i;
-                }
-                if (sessionIndex > -1)
-                {
-                    int processId = ps[sessionIndex].Id;
-
-                    if (processId > 1)
-                    {
-                        return true;
-                    }
+                        return true;                      
                 }
                 return false;
             }
+            public static bool IsPsiServiceUp(int sessionID)
+            {
+                var pipeClient = new NamedPipeClientStream(".", "PIPE" + sessionID, PipeDirection.In);
+                try
+                {
+                    pipeClient.Connect(100);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (pipeClient.IsConnected)                    
+                    return true;
+                return false;
+            }
+            public static bool SendQuitMessage(int sessionID)
+            {
+                var pipeClient = new NamedPipeClientStream(".", "PIPE" + sessionID + "QUIT", PipeDirection.InOut);
+                try
+                {
+                    pipeClient.Connect(100);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                if (pipeClient.IsConnected)
+                    return true;
+                return false;
+            }
 
-            public static bool Launch(string appCmdLine, int sessionID)
+            public static void DoQuitViaPipe()
+            {
+                Process[] ps = Process.GetProcessesByName("explorer");
+                List<int> sessionIds = new List<int>();
+                //For each user session there should be at least 1 explorer proces running
+                //so we can launch one psiblock per session
+                //note: there may be more than 1 explorer.exe process per session
+                //we need to start only one psi per session
+
+                for (int i = 0; i < ps.Length; i++)
+                {
+                    if (!sessionIds.Contains(ps[i].SessionId))
+                    {
+                        sessionIds.Add(ps[i].SessionId);
+                    }
+                }
+                for (int i = 0; i < sessionIds.Count; i++)
+                {
+                    // App.WindowsService.ProcessHandler.
+                    SendQuitMessage(sessionIds[i]);
+                }
+            }
+
+            public static bool Launch(string appCmdLine, int processId, int sessionID)
             {
                 bool ret = false;
-                int sessionIndex = -1;
+               // int sessionIndex = -1;
 
                 //Either specify the processID explicitly
                 //Or try to get it from a process owned by the user.
                 //In this case assuming there is only one explorer.exe
 
-                Process[] ps = Process.GetProcessesByName("explorer");
-                for(int i = 0; i < ps.Length; i++)
+                //Process[] ps = Process.GetProcessesByName("explorer");
+                /*for(int i = 0; i < ps.Length; i++)
                 {
                     if (ps[i].SessionId == sessionID)
                         sessionIndex = i;
-                }
-                if (sessionIndex > -1)
+                }*/
+                //if (sessionIndex > -1)
                 {
-                    int processId =  ps[sessionIndex].Id;
+                //    int processId =  ps[sessionIndex].Id;
 
-                    if (processId > 1)
+                  //  if (processId > 1)
                     {
                         IntPtr token = GetPrimaryToken(processId);
 
                         if (token != IntPtr.Zero)
                         {
-                            if (!IsPsiUp(sessionID))
+                            if (!IsPsiServiceUp(sessionID))
                             {
                                 IntPtr envBlock = GetEnvironmentBlock(token);
                                 ret = LaunchProcessAsUser(appCmdLine, token, envBlock);

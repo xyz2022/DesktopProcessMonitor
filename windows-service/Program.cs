@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging.EventLog;
 using CliWrap;
-
+using static App.WindowsService.ProcessHandler;
 const string ServiceName = "NSW DoE AppGuard";
 
-if (args is { Length: 1 })
+if (args is { Length: >= 1 })
 {
     try
     {
@@ -14,6 +14,8 @@ if (args is { Length: 1 })
 
         if (args[0] is "/Install")
         {
+            ProcessHandler.ProcessAsUser.DoQuitViaPipe();
+            
             await Cli.Wrap("sc")
                 .WithArguments(new[] { "create", ServiceName, $"binPath={executablePath}", "start=auto" })
                 .ExecuteAsync();
@@ -24,16 +26,21 @@ if (args is { Length: 1 })
         }
         else if (args[0] is "/Uninstall")
         {
+            //Send Quit Message to AppGuard processes
+            ProcessHandler.ProcessAsUser.DoQuitViaPipe();
+
             await Cli.Wrap("sc")
                 .WithArguments(new[] { "stop", ServiceName })
                 .ExecuteAsync();
-
+            
             await Cli.Wrap("sc")
                 .WithArguments(new[] { "delete", ServiceName })
                 .ExecuteAsync();
+
+
         }
     }
-    catch (Exception ex)
+    catch (Exception)
     {
         //Console.WriteLine(ex);
     }
@@ -60,3 +67,4 @@ builder.Logging.AddConfiguration(
 
 IHost host = builder.Build();
 host.Run();
+

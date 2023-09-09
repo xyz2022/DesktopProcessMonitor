@@ -15,13 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_35C60E14F6E24B09B056C94442732490"
+        "MsmKey" = "8:_1F825E1556CB41EEB6E7398BAD1236F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C015AB07E8B14E2A84B11FF1AA3C871B"
+        "MsmKey" = "8:_9CB39A7228C546399621F5E5FDFD47A0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -97,32 +97,32 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_2B2B85D63FC04655A1255598AC2D2A5F"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_9760F24AF80E48C0922616426D383F9D"
             {
             "Name" = "8:Publish Items from App.WindowsService (Active)"
             "Condition" = "8:"
-            "Object" = "8:_C015AB07E8B14E2A84B11FF1AA3C871B"
+            "Object" = "8:_9CB39A7228C546399621F5E5FDFD47A0"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
             "Arguments" = "8:/Install"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_6218FA23_E9C4_4C61_8246_295951891B8A"
+            "Identifier" = "8:_126E75E7_3841_4A90_BB2C_35D84CD6B12D"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             "Run64Bit" = "11:TRUE"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A940D28BBBFD4E2AAC04EEBA2D6F7019"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A434C7B2501246209E2806A5198D71E4"
             {
             "Name" = "8:Publish Items from App.WindowsService (Active)"
             "Condition" = "8:"
-            "Object" = "8:_C015AB07E8B14E2A84B11FF1AA3C871B"
+            "Object" = "8:_9CB39A7228C546399621F5E5FDFD47A0"
             "FileType" = "3:2"
             "InstallAction" = "3:4"
             "Arguments" = "8:/Uninstall"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_8B6F7E06_A978_4C02_957B_4246E3EF95BC"
+            "Identifier" = "8:_725BE757_A02E_4931_BB58_373768514549"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             "Run64Bit" = "11:TRUE"
@@ -152,16 +152,16 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_35C60E14F6E24B09B056C94442732490"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1F825E1556CB41EEB6E7398BAD1236F2"
             {
-            "SourcePath" = "8:..\\PsiService\\bin\\Release\\net6.0\\publish\\win-x64\\PsiService.exe"
-            "TargetName" = "8:PsiService.exe"
+            "SourcePath" = "8:..\\WMProcMon\\WMProcmon\\x64\\Release\\WMProcMon.exe"
+            "TargetName" = "8:WMProcMon.exe"
             "Tag" = "8:"
-            "Folder" = "8:_1B4456D7141444D5B8E28AA213BD4776"
+            "Folder" = "8:_C0645C164EAB492BA210C80547D37D08"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
+            "ReadOnly" = "11:TRUE"
             "Hidden" = "11:FALSE"
             "System" = "11:FALSE"
             "Permanent" = "11:FALSE"
@@ -201,6 +201,18 @@
                 {
                 }
             }
+            "{994432C3-9487-495D-8656-3E829A8DBDDE}:_C0645C164EAB492BA210C80547D37D08"
+            {
+            "DefaultLocation" = "8:[WindowsFolder][ProductName]"
+            "Name" = "8:WindowsSubfolder"
+            "AlwaysCreate" = "11:TRUE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:WINDOWSSUBFOLDER"
+                "Folders"
+                {
+                }
+            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_C230AF87700C4B9EA198A08B5087386D"
             {
             "Name" = "8:#1916"
@@ -208,6 +220,17 @@
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:DesktopFolder"
+                "Folders"
+                {
+                }
+            }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_FE99DEBEB2914938BD7DE0780B87F77C"
+            {
+            "Name" = "8:#1924"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:WindowsFolder"
                 "Folders"
                 {
                 }
@@ -227,24 +250,24 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SetupPsiBlock"
-        "ProductCode" = "8:{1DF4ACA3-5F22-4081-BF79-4AB4543A6580}"
-        "PackageCode" = "8:{3D3111EE-76DC-4051-9CE9-8F56E5AE0473}"
+        "ProductName" = "8:DoE App Guard"
+        "ProductCode" = "8:{EFC9DCDC-7FC2-495F-866D-3F99A9E434C5}"
+        "PackageCode" = "8:{AB7A63DB-E3D7-4284-B643-B68885A5D6B1}"
         "UpgradeCode" = "8:{8DB977C0-C7DE-4B13-90B3-965BCD952CA2}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
+        "RemovePreviousVersions" = "11:TRUE"
+        "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:0.6.6"
         "Manufacturer" = "8:NSW DoE"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:SetupPsiBlock"
+        "Title" = "8:DoE App Guard"
         "Subject" = "8:"
         "ARPCONTACT" = "8:NSW DoE"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
+        "ARPCOMMENTS" = "8:DoE App Guard"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
@@ -484,28 +507,6 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_1C93964A34534DEB8B303D3BAEDE5584"
-                    {
-                    "Sequence" = "3:200"
-                    "DisplayName" = "8:Installation Folder"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_41DEA6C1E3E143E1BF60062612B8A5D7"
                     {
                     "Sequence" = "3:100"
@@ -683,9 +684,9 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_99287B58D64B44929460B6C27A7B3D67"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_C59799095886424D8643101A11A07E4A"
                     {
-                    "Sequence" = "3:300"
+                    "Sequence" = "3:200"
                     "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -705,41 +706,6 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_CB05A3BB8FA341E28C21243720172093"
-                    {
-                    "Sequence" = "3:200"
-                    "DisplayName" = "8:Installation Folder"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "InstallAllUsersVisible"
-                            {
-                            "Name" = "8:InstallAllUsersVisible"
-                            "DisplayName" = "8:#1059"
-                            "Description" = "8:#1159"
-                            "Type" = "3:5"
-                            "ContextData" = "8:1;True=1;False=0"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:0"
-                            "Value" = "3:1"
-                            "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -748,12 +714,12 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C015AB07E8B14E2A84B11FF1AA3C871B"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9CB39A7228C546399621F5E5FDFD47A0"
             {
             "SourcePath" = "8:..\\windows-service\\bin\\Release\\net7.0-windows\\win-x64\\publish\\App.WindowsService.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_1B4456D7141444D5B8E28AA213BD4776"
+            "Folder" = "8:_C0645C164EAB492BA210C80547D37D08"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
