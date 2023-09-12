@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <chrono>
 #include <thread>
 //#include <winnt.h>

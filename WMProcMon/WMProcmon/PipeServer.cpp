@@ -21,9 +21,14 @@ void PipeServer()
     bool success = ProcessIdToSessionId(pid, &sessionID);
     cout << "SesionID = " << sessionID << endl;
     std::wstring pipename = L"\\\\.\\pipe\\PIPE";// << sessionID;
-    WCHAR sessionIDText[10];
-    ZeroMemory(sessionIDText, 10 * sizeof(WCHAR));
-    _itow_s(sessionID, sessionIDText, 10);
+    std::wstring sessionIDText;
+
+    std::wostringstream stream;
+    stream << sessionID;
+    sessionIDText = stream.str();
+
+    //ZeroMemory(sessionIDText, 11 * sizeof(WCHAR));
+    //_itow_s(sessionID, sessionIDText, 10);
     pipename.append(sessionIDText);
 
     wcout << L"Creating Named Pipe: " << pipename.c_str() << endl;
@@ -70,9 +75,13 @@ void PipeServerQuitter()
     bool success = ProcessIdToSessionId(pid, &sessionID);
     cout << "SesionID = " << sessionID << endl;
     std::wstring pipename = L"\\\\.\\pipe\\PIPE";// << sessionID;
-    WCHAR sessionIDText[10];
-    ZeroMemory(sessionIDText, 10 * sizeof(WCHAR));
-    _itow_s(sessionID, sessionIDText, 10);
+    std::wstring sessionIDText;
+    //ZeroMemory(sessionIDText, 11 * sizeof(WCHAR));
+    //_itow_s(sessionID, sessionIDText, 10);
+    std::wostringstream stream;
+    stream << sessionID;
+    sessionIDText = stream.str();
+
     pipename.append(sessionIDText);
     pipename.append(L"QUIT");
     wcout << L"Creating Named Pipe: " << pipename.c_str() << endl;
@@ -87,17 +96,6 @@ void PipeServerQuitter()
         NULL);
     while (hPipe != INVALID_HANDLE_VALUE)
     {
-        //       if (ConnectNamedPipe(hPipe, NULL) != FALSE)   // wait for someone to connect to the pipe
-        //       {
-        //           while (ReadFile(hPipe, buffer, sizeof(buffer) - 1, &dwRead, NULL) != FALSE)
-        //           {
-        //               /* add terminating zero */
-        //               buffer[dwRead] = '\0';
-        //
-        //               /* do something with data in buffer */
-        //               printf("%s", buffer);
-        //           }
-        //       }
         cout << "SERVER Pipe waiting for client connection" << endl;
         if (ConnectNamedPipe(hPipe, NULL) != FALSE)
         {

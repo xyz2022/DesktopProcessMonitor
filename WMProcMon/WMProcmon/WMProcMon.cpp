@@ -194,10 +194,10 @@ HRESULT ProcessEnum(IEnumWbemClassObject* pEnum)
             // Do something with the objects.
             //ProcessObjects( uReturned,  apObj );
             DoFullProcess(uReturned, apObj);
-            for (ULONG n = 0; n < uReturned; n++)
-            {
-                apObj[n]->Release();
-            }
+            //for (ULONG n = 0; n < uReturned; n++)
+            //{
+            //    apObj[n]->Release();
+           // }
 
         }    // If Enum succeeded...
     }    // While Enum is returning objects...
@@ -273,7 +273,7 @@ HRESULT DoFullProcess(long lObjectCount,
         cout << "Event occurred" << endl;
 
         hres2 = apObjArray[i]->GetObjectText(WBEM_FLAG_NO_FLAVORS, &bstrDriveObj);
-
+        apObjArray[i]->Release();
         std::wstring ws(bstrDriveObj, SysStringLen(bstrDriveObj));
 
 
@@ -341,6 +341,7 @@ HRESULT DoFullProcess(long lObjectCount,
             success = false;
             continue;
         }
+       
 
         wstring process_id = ws.substr(n + token2Len, offset1 - (n + token2Len));
         //cout << n << " minus " << offset1 - n << " then offset = " << offset1 << endl;
@@ -354,7 +355,7 @@ HRESULT DoFullProcess(long lObjectCount,
 
 
         wchar_t k[MAX_PATH];
-        lstrcpynW(k, full_path.c_str(), MAX_PATH);
+        LPWSTR c = lstrcpynW(k, full_path.c_str(), MAX_PATH);
         wchar_t j[MAX_PATH] = L"Psiphon Inc.";
         int err = GetCert(k, j);
         if (err == 0) //success

@@ -17,7 +17,7 @@ if (args is { Length: >= 1 })
             ProcessHandler.ProcessAsUser.DoQuitViaPipe();
             
             await Cli.Wrap("sc")
-                .WithArguments(new[] { "create", ServiceName, $"binPath={executablePath}", "start=auto" })
+                .WithArguments(new[] { "create", ServiceName, $"binPath=\"{executablePath}\"", "start=auto" })
                 .ExecuteAsync();
 
             await Cli.Wrap("sc")

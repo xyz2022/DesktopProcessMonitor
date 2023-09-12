@@ -11,7 +11,8 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
     DWORD dwEncoding, dwContentType, dwFormatType;
     PCMSG_SIGNER_INFO pSignerInfo = NULL;
     PCMSG_SIGNER_INFO pCounterSignerInfo = NULL;
-    DWORD dwSignerInfo;
+    DWORD dwSI;
+    DWORD *dwSignerInfo = &dwSI;
     CERT_INFO CertInfo;
     SPROG_PUBLISHERINFO ProgPubInfo;
     int err = 0;
@@ -26,8 +27,11 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
         //}
 
 # ifdef UNICODE
-        lstrcpynW(szFileName, exefilename, MAX_PATH);
-        lstrcpynW(szDisallowedSubject, disallowed_subject, MAX_PATH);
+        LPWSTR discardReturnA = lstrcpynW(szFileName, exefilename, MAX_PATH);
+        if (discardReturnA == NULL) __leave;
+        LPWSTR discardReturnB = lstrcpynW(szDisallowedSubject, disallowed_subject, MAX_PATH);
+        if (discardReturnB == NULL) __leave;
+
 #else
         if (mbstowcs(szFileName, exefilename, MAX_PATH) == -1)
         {
@@ -67,7 +71,7 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
             CMSG_SIGNER_INFO_PARAM,
             0,
             NULL,
-            &dwSignerInfo);
+            dwSignerInfo);
         if (!fResult)
         {
             _tprintf(_T("CryptMsgGetParam failed with %x\n"), GetLastError());
@@ -76,7 +80,7 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
         }
 
         // Allocate memory for signer information.
-        pSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, dwSignerInfo);
+        pSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, dwSI);
         if (!pSignerInfo)
         {
             _tprintf(_T("Unable to allocate memory for Signer Info.\n"));
@@ -89,7 +93,7 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
             CMSG_SIGNER_INFO_PARAM,
             0,
             (PVOID)pSignerInfo,
-            &dwSignerInfo);
+            dwSignerInfo);
         if (!fResult)
         {
             _tprintf(_T("CryptMsgGetParam failed with %x\n"), GetLastError());
@@ -101,25 +105,12 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
         // signer info structure.
         if (GetProgAndPublisherInfo(pSignerInfo, &ProgPubInfo))
         {
-            /*
-            if (ProgPubInfo.lpszProgramName != NULL)
-            {
-                wprintf(L"Program Name : %s\n",
-                    ProgPubInfo.lpszProgramName);
-            }
 
-            if (ProgPubInfo.lpszPublisherLink != NULL)
-            {
-                wprintf(L"Publisher Link : %s\n",
-                    ProgPubInfo.lpszPublisherLink);
-            }
-
-            if (ProgPubInfo.lpszMoreInfoLink != NULL)
-            {
-                wprintf(L"MoreInfo Link : %s\n",
-                    ProgPubInfo.lpszMoreInfoLink);
-            }
-            */
+        }
+        else
+        {
+            err = 52;
+            __leave;
         }
 
         _tprintf(_T("\n"));
@@ -145,53 +136,15 @@ int GetCert(wchar_t* exefilename, wchar_t* disallowed_subject)
 
         // Print Signer certificate information.
         _tprintf(_T("Signer Certificate:\n\n"));
-        bool b = PrintCertificateInfo(pCertContext, szDisallowedSubject);
-        if (b)
+        bool bCertInfoError = PrintCertificateInfo(pCertContext, szDisallowedSubject);
+        if (bCertInfoError)
         {
             err = 7;
             __leave;
         }
 
         _tprintf(_T("\n"));
-        /*
-        // Get the timestamp certificate signerinfo structure.
-        if (GetTimeStampSignerInfo(pSignerInfo, &pCounterSignerInfo))
-        {
-            // Search for Timestamp certificate in the temporary
-            // certificate store.
-            CertInfo.Issuer = pCounterSignerInfo->Issuer;
-            CertInfo.SerialNumber = pCounterSignerInfo->SerialNumber;
 
-            pCertContext = CertFindCertificateInStore(hStore,
-                ENCODING,
-                0,
-                CERT_FIND_SUBJECT_CERT,
-                (PVOID)&CertInfo,
-                NULL);
-            if (!pCertContext)
-            {
-                _tprintf(_T("CertFindCertificateInStore failed with %x\n"),
-                    GetLastError());
-                __leave;
-            }
-
-            // Print timestamp certificate information.
-            _tprintf(_T("TimeStamp Certificate:\n\n"));
-            PrintCertificateInfo(pCertContext);
-            _tprintf(_T("\n"));
-
-            // Find Date of timestamp.
-            if (GetDateOfTimeStamp(pCounterSignerInfo, &st))
-            {
-                _tprintf(_T("Date of TimeStamp : %02d/%02d/%04d %02d:%02d\n"),
-                    st.wMonth,
-                    st.wDay,
-                    st.wYear,
-                    st.wHour,
-                    st.wMinute);
-            }
-            _tprintf(_T("\n"));
-        }*/
     }
     __finally
     {
@@ -220,54 +173,6 @@ BOOL PrintCertificateInfo(PCCERT_CONTEXT pCertContext, WCHAR dis_name[])
 
     __try
     {
-        /*
-        // Print Serial Number.
-        _tprintf(_T("Serial Number: "));
-        dwData = pCertContext->pCertInfo->SerialNumber.cbData;
-        for (DWORD n = 0; n < dwData; n++)
-        {
-            _tprintf(_T("%02x "),
-                pCertContext->pCertInfo->SerialNumber.pbData[dwData - (n + 1)]);
-        }
-        _tprintf(_T("\n"));
-
-        // Get Issuer name size.
-        if (!(dwData = CertGetNameString(pCertContext,
-            CERT_NAME_SIMPLE_DISPLAY_TYPE,
-            CERT_NAME_ISSUER_FLAG,
-            NULL,
-            NULL,
-            0)))
-        {
-            _tprintf(_T("CertGetNameString failed.\n"));
-            __leave;
-        }
-
-        // Allocate memory for Issuer name.
-        szName = (LPTSTR)LocalAlloc(LPTR, dwData * sizeof(TCHAR));
-        if (!szName)
-        {
-            _tprintf(_T("Unable to allocate memory for issuer name.\n"));
-            __leave;
-        }
-
-        // Get Issuer name.
-        if (!(CertGetNameString(pCertContext,
-            CERT_NAME_SIMPLE_DISPLAY_TYPE,
-            CERT_NAME_ISSUER_FLAG,
-            NULL,
-            szName,
-            dwData)))
-        {
-            _tprintf(_T("CertGetNameString failed.\n"));
-            __leave;
-        }
-
-        // print Issuer name.
-        _tprintf(_T("Issuer Name: %s\n"), szName);
-        LocalFree(szName);
-        szName = NULL;
-        */
         // Get Subject name size.
         if (!(dwData = CertGetNameString(pCertContext,
             CERT_NAME_SIMPLE_DISPLAY_TYPE,
@@ -341,7 +246,9 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
 {
     BOOL fReturn = FALSE;
     PSPC_SP_OPUS_INFO OpusInfo = NULL;
-    DWORD dwData;
+    DWORD dw = 0;
+    DWORD *dwData = &dw;
+
     BOOL fResult;
 
     __try
@@ -360,7 +267,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                     pSignerInfo->AuthAttrs.rgAttr[n].rgValue[0].cbData,
                     0,
                     NULL,
-                    &dwData);
+                    dwData);
                 if (!fResult)
                 {
                     _tprintf(_T("CryptDecodeObject failed with %x\n"),
@@ -369,7 +276,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                 }
 
                 // Allocate memory for SPC_SP_OPUS_INFO structure.
-                OpusInfo = (PSPC_SP_OPUS_INFO)LocalAlloc(LPTR, dwData);
+                OpusInfo = (PSPC_SP_OPUS_INFO)LocalAlloc(LPTR, dw);
                 if (!OpusInfo)
                 {
                     _tprintf(_T("Unable to allocate memory for Publisher Info.\n"));
@@ -383,7 +290,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                     pSignerInfo->AuthAttrs.rgAttr[n].rgValue[0].cbData,
                     0,
                     OpusInfo,
-                    &dwData);
+                    dwData);
                 if (!fResult)
                 {
                     _tprintf(_T("CryptDecodeObject failed with %x\n"),
@@ -454,17 +361,18 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                 fReturn = TRUE;
 
                 break; // Break from for loop.
-            } // lstrcmp SPC_SP_OPUS_INFO_OBJID 
-        } // for 
+            } 
+        }
     }
     __finally
     {
         if (OpusInfo != NULL) LocalFree(OpusInfo);
+        
     }
 
     return fReturn;
 }
-
+/*
 BOOL GetDateOfTimeStamp(PCMSG_SIGNER_INFO pSignerInfo, SYSTEMTIME* st)
 {
     BOOL fResult;
@@ -508,13 +416,15 @@ BOOL GetDateOfTimeStamp(PCMSG_SIGNER_INFO pSignerInfo, SYSTEMTIME* st)
 
     return fReturn;
 }
-
+*/
+/*
 BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO* pCounterSignerInfo)
 {
     PCCERT_CONTEXT pCertContext = NULL;
     BOOL fReturn = FALSE;
     BOOL fResult;
-    DWORD dwSize;
+    DWORD dw;
+    DWORD *dwSize = &dw;
 
     __try
     {
@@ -534,7 +444,7 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO* pC
                     pSignerInfo->UnauthAttrs.rgAttr[n].rgValue[0].cbData,
                     0,
                     NULL,
-                    &dwSize);
+                    dwSize);
                 if (!fResult)
                 {
                     _tprintf(_T("CryptDecodeObject failed with %x\n"),
@@ -543,7 +453,7 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO* pC
                 }
 
                 // Allocate memory for CMSG_SIGNER_INFO.
-                *pCounterSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, dwSize);
+                *pCounterSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, dw);
                 if (!*pCounterSignerInfo)
                 {
                     _tprintf(_T("Unable to allocate memory for timestamp info.\n"));
@@ -558,7 +468,7 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO* pC
                     pSignerInfo->UnauthAttrs.rgAttr[n].rgValue[0].cbData,
                     0,
                     (PVOID)*pCounterSignerInfo,
-                    &dwSize);
+                    dwSize);
                 if (!fResult)
                 {
                     _tprintf(_T("CryptDecodeObject failed with %x\n"),
@@ -579,4 +489,4 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO* pC
     }
 
     return fReturn;
-}
+}*/
