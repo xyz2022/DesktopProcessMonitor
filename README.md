@@ -4,13 +4,13 @@ The purpose of this Winodows 10/11 application is to terminate policy-prohibited
 # Why not use Group Policy Editor?
 
 Group Policy Editor on Windows 10/11 blocks processes from starting-up until it has checked the binary's certificate; significantly and noticibly impacting system performance, especially on older hardware. 
-DesktopProcessMonitor does not block processes from starting up. It does however terminate new processes quickly if their certificates matches any policy-prohibited publisher. This results in no noticible impact to system performance.
+DesktopProcessMonitor does not block processes from starting up. It does however terminate new processes quickly if their certificates matche any policy-prohibited publisher. This results in no noticible impact to system performance.
 
 # Architecture
 Project has 3 sub-projects:
 1. App.Windows.Service: C# Windows Service. Spawns WMProcMon for each logged in user. Re-runs WMProcMon if it is terminated by the user. 
 2. WMProcMon: C++ background worker. Subscribes to the _InstanceCreationEvent_ message via WMI. This event is a signal that a new process was created _for_ or _by_ the user. 
-    WMProcMon looksup the Authenticode certificate for the exe_file of each new process. If the publisher matches "Psiphon Inc, WMProcMon terminates the processes. 
+    WMProcMon looksup the Authenticode certificate for the exe_file of each new process. If the publisher matches "Psiphon Inc", WMProcMon terminates the process. 
     Note: this is a non-blocking operation, no processes on the OS will be prevented or delayed from starting-up. However the process will terminate within a few ms if its certificate publisher is a match to the target string. 
 3. SetPsiBlock: The Visual Studio Setup project handling installation and uninstallation of App.Windows.Service and WMProcMon.
 
