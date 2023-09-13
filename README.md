@@ -7,10 +7,10 @@ Project has 3 sub-projects:
     Note: this is a non-blocking operation, no processes on the OS will be prevented or delayed from starting-up. However the process will terminate within a few ms if its certificate publisher is a match to the target string. 
 3. SetPsiBlock: The Visual Studio Setup project handling installation and uninstallation of App.Windows.Service and WMProcMon.
 
-#Security considerations
+# Security considerations
 
 Resisting Priv-Esc tecniques:
-1. The file path to the service executable is quoted.
+1. The file path to service executable is quoted.
 2. Service executable folder is read-only for unpriveliged users.
 3. WMProcMon executable folder is read-only for unpriveliged users.
 4. WMProcMon runs with the owner set as the current logged-in user or users.
