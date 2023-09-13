@@ -4,7 +4,7 @@ The purpose of this Winodows 10/11 application is to terminate policy-prohibited
 # Why not use Group Policy Editor?
 
 Group Policy Editor on Windows 10/11 blocks processes from starting-up until it has checked the binary's certificate; significantly and noticibly impacting system performance, especially on older hardware. 
-DesktopProcessMonitor does not block processes from starting up. It does however terminate new processes quickly if their certificates matche any policy-prohibited publisher. This results in no noticible impact to system performance.
+DesktopProcessMonitor does not block processes from starting up. It does however terminate new processes quickly if their certificates match any policy-prohibited publisher. This results in no noticible impact to system performance.
 
 # Architecture
 Project has 3 sub-projects:
