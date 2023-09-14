@@ -24,8 +24,8 @@ Resisting Priv-Esc tecniques:
 
 # How-to Build 
 
-1. Microsoft Visual Studio 2022 17.7.4 or higher
-2. Publish App.Windows.Service  -> Local Folder (use default selected folder)-> Enabled Options: Self-contained, Produce Single File, EnableReadyToRunCompilation
-3. Rebuild WMProcMon
-4. Rebuild SetupPsiBlock
-5. SetupPsiBlock.msi is in folder
+1. Open _workers.sln_ in Microsoft Visual Studio 2022 17.7.4 or higher
+3. Publish App.Windows.Service  -> Local Folder (use default selected folder)-> Enabled Options: Self-contained, Produce Single File, EnableReadyToRunCompilation
+4. Rebuild WMProcMon
+5. Rebuild SetupPsiBlock
+6. SetupPsiBlock.msi is in folder
