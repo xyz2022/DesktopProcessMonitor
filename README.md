@@ -20,5 +20,5 @@ Resisting Priv-Esc tecniques:
 1. The file path to service executable is quoted.
 2. Service executable folder is read-only for unpriveliged users.
 3. WMProcMon executable folder is read-only for unpriveliged users.
-4. WMProcMon runs with the owner set as the current logged-in user or users.
+4. WMProcMon process is owned by the current logged-in user.
 
