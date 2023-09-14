@@ -1,5 +1,5 @@
 # DesktopProcessMonitor
-The purpose of this Winodows 10/11 application is to terminate policy-prohibited applications on corportate-owned devices. This application is intended for system adminstrators to install on managed devices. An example of an prohibited application could be a 3rd party VPN binary such as _Psiphon 3_. The default behavior is **DesktopProcessMonitor** is to terminate Psiphon 3, however the code can be simply modified to target any policy-prohibitied applications.
+The purpose of this Winodows 10/11 application is to terminate policy-prohibited applications on corportate-owned devices. This application is intended for system adminstrators to install on managed devices. An example of a prohibited application could be a 3rd party VPN binary such as _Psiphon 3_. The default behavior of **DesktopProcessMonitor** is to terminate Psiphon 3, however the code can be simply modified to target any policy-prohibitied applications.
 
 # Why not use Group Policy Editor?
 
