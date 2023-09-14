@@ -22,3 +22,10 @@ Resisting Priv-Esc tecniques:
 3. WMProcMon executable folder is read-only for unpriveliged users.
 4. WMProcMon process is owned by the current logged-in user.
 
+# How-to Build 
+
+1. Microsoft Visual Studio 2022 17.7.4 or higher
+2. Publish App.Windows.Service  -> Local Folder (use default selected folder)-> Enabled Options: Self-contained, Produce Single File, EnableReadyToRunCompilation
+3. Rebuild WMProcMon
+4. Rebuild SetupPsiBlock
+5. SetupPsiBlock.msi is in folder
