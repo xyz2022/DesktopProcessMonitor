@@ -41,5 +41,5 @@ Install ->
 
 Uninstall ->
 
-    Uninstall -> msiexec.exe /x SetupPsiBlock.msi MSIFASTINSTALL=4 /qn /norestart
+    msiexec.exe /x SetupPsiBlock.msi MSIFASTINSTALL=4 /qn /norestart
     
