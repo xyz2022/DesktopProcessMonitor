@@ -11,11 +11,16 @@ namespace App.WindowsService;
 
 
 
+
 public sealed class WindowsBackgroundService : BackgroundService
 {
+
+
+
+
     private readonly AppGuardService _appGuardService;
     private readonly ILogger<WindowsBackgroundService> _logger;
-
+    
     public WindowsBackgroundService(
         AppGuardService appGuardService,
         ILogger<WindowsBackgroundService> logger) =>
@@ -85,6 +90,7 @@ public sealed class WindowsBackgroundService : BackgroundService
             // recovery options, we need to terminate the process with a non-zero exit code.
             Environment.Exit(1);
         }
+        Environment.Exit(0);
     }
 
 

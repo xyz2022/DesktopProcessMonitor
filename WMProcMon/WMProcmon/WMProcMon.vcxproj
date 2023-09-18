@@ -145,6 +145,10 @@
     <ClInclude Include="CertGetter.h" />
     <ClInclude Include="PipeServer.h" />
     <ClInclude Include="ProcessScanner.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WMProcMon.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
