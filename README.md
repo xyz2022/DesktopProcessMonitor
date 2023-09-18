@@ -32,6 +32,10 @@ Resisting Priv-Esc tecniques:
 
 # Install
 Desktop Users install via MSI
+
 Admins can install/uninstall silently via script:
+
     Install ->   msiexec.exe /i SetupPsiBlock.msi MSIFASTINSTALL=4 /qn /norestart
+    
     Uninstall -> msiexec.exe /x SetupPsiBlock.msi MSIFASTINSTALL=4 /qn /norestart
+    
