@@ -28,4 +28,18 @@ Resisting Priv-Esc tecniques:
 3. Publish App.Windows.Service  -> Local Folder (use default selected folder)-> Enabled Options: Self-contained, Produce Single File, EnableReadyToRunCompilation
 4. Rebuild WMProcMon
 5. Rebuild SetupPsiBlock
-6. SetupPsiBlock.msi is in folder
+6. SetupPsiBlock.msi will build in ./release/x64 directory
+
+# Install
+Desktop Users install via MSI
+
+Network administrators install & uninstall silently via script:
+
+Install ->   
+    
+    msiexec.exe /i SetupPsiBlock.msi MSIFASTINSTALL=4 /qn /norestart
+
+Uninstall ->
+
+    msiexec.exe /x SetupPsiBlock.msi MSIFASTINSTALL=4 /qn /norestart
+    
