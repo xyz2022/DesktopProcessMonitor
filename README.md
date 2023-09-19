@@ -3,7 +3,7 @@
 https://github.com/xyz2022/DesktopProcessMonitor/releases/latest
 
 # DesktopProcessMonitor
-The purpose of this Windows 10/11 application is to terminate policy-prohibited applications on corportate-owned devices. This application is intended for system adminstrators to install on managed devices. An example of a prohibited application could be a 3rd party VPN binary such as _Psiphon 3_. The default behavior of **DesktopProcessMonitor** is to terminate Psiphon 3, however the code can be simply modified to target any policy-prohibitied applications.
+Terminate policy-prohibited applications on corportate-owned devices. This application aims to block the use of specific apps on managed devices. Example: 3rd party VPN binaries like _Psiphon 3_ may be against the terms of use for users of managed devices, however the users have been using the VPN despite comnay policy. In this case, the default behavior of **DesktopProcessMonitor** is to terminate Psiphon 3 when the user tries to open it. The default behavior can be modified to target any policy-prohibitied applications.
 
 # Why not Group Policy Editor?
 
