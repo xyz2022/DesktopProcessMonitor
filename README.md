@@ -8,6 +8,7 @@ Terminate policy-prohibited applications on corportate-owned devices. This appli
 # Why not Group Policy Editor?
 
 Slowdown. For each process, gpedit blocks processes from starting-up until the certificate is located and read; impacting system performance, especially on older hardware. On the other hand, DesktopProcessMonitor is fast. It does not block processes while certifcates are located and read. It does however terminate new processes if their certificates are from any policy-prohibited publisher. This results in reduced impact to system performance.
+
 ![image](https://github.com/xyz2022/DesktopProcessMonitor/assets/91395091/d90723cf-b489-490a-9daa-77ee7e76da04)
 
 # Architecture
