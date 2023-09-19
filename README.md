@@ -1,12 +1,15 @@
 # DesktopProcessMonitor
 The purpose of this Windows 10/11 application is to terminate policy-prohibited applications on corportate-owned devices. This application is intended for system adminstrators to install on managed devices. An example of a prohibited application could be a 3rd party VPN binary such as _Psiphon 3_. The default behavior of **DesktopProcessMonitor** is to terminate Psiphon 3, however the code can be simply modified to target any policy-prohibitied applications.
 
-# Why not use Group Policy Editor?
+# Why not Group Policy Editor?
 
-Group Policy Editor on Windows 10/11 blocks processes from starting-up until it has checked the binary's certificate; significantly and noticibly impacting system performance, especially on older hardware. 
-DesktopProcessMonitor does not block processes from starting up. It does however terminate new processes quickly if their certificates match any policy-prohibited publisher. This results in no noticible impact to system performance.
+Slowdown. For each process, gpedit blocks processes from starting-up until the certificate is located and read; impacting system performance, especially on older hardware. 
+DesktopProcessMonitor does not block processes from starting up. It does however terminate new processes quickly if their certificates match any policy-prohibited publisher. This results in reduced impact to system performance.
+![image](https://github.com/xyz2022/DesktopProcessMonitor/assets/91395091/d90723cf-b489-490a-9daa-77ee7e76da04)
+
 
 # Architecture
+
 Project has 3 sub-projects:
 1. App.Windows.Service: C# Windows Service. Spawns WMProcMon for each logged in user. Re-runs WMProcMon if it is terminated by the user. 
 2. WMProcMon: C++ background worker. Subscribes to the _InstanceCreationEvent_ message via WMI. This event is a signal that a new process was created _for_ or _by_ the user. 
