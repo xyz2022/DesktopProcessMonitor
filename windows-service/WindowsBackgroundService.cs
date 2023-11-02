@@ -68,7 +68,7 @@ public sealed class WindowsBackgroundService : BackgroundService
                         _logger.LogWarning(i.ToString() + " Started AppGuardService in Session ID: " + ps[i].SessionId.ToString());
                     }
                 }                                         
-                await Task.Delay(TimeSpan.FromSeconds(15f), stoppingToken);                
+                await Task.Delay(TimeSpan.FromSeconds(60f), stoppingToken);                
             }
         }
         catch (TaskCanceledException)
